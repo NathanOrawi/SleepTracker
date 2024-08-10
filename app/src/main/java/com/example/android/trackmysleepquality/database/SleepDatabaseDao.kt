@@ -38,5 +38,5 @@ interface SleepDatabaseDao {
     @Query("SELECT * FROM daily_sleep_quality_table ORDER BY nightId DESC")
     // Room already uses a background thread for that specific @Query which
     // returns LiveData. So, you don't need to use a coroutine to call this function.
-    fun getAllNights(): LiveData<SleepNight>
+    fun getAllNights(): LiveData<List<SleepNight>>
 }
