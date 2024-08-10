@@ -26,15 +26,17 @@ import androidx.room.Update
 @Dao
 interface SleepDatabaseDao {
     @Insert
-    fun insert(night: SleepNight)
+    suspend fun insert(night: SleepNight)
     @Update
-    fun update(night: SleepNight)
+    suspend fun update(night: SleepNight)
     @Query("SELECT * from daily_sleep_quality_table WHERE nightId = :key")
-    fun get(key: Long): SleepNight?
+    suspend fun get(key: Long): SleepNight?
     @Query("DELETE FROM daily_sleep_quality_table")
-    fun clear()
+    suspend fun clear()
     @Query("SELECT * FROM daily_sleep_quality_table ORDER BY nightId DESC LIMIT 1")
-    fun getTonight(): SleepNight?
+    suspend fun getTonight(): SleepNight?
     @Query("SELECT * FROM daily_sleep_quality_table ORDER BY nightId DESC")
+    // Room already uses a background thread for that specific @Query which
+    // returns LiveData. So, you don't need to use a coroutine to call this function.
     fun getAllNights(): LiveData<SleepNight>
 }
