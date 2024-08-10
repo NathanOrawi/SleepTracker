@@ -20,8 +20,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+//import androidx.compose.ui.window.application
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.inventory.R
 import com.example.inventory.databinding.FragmentSleepTrackerBinding
 
@@ -31,19 +34,31 @@ import com.example.inventory.databinding.FragmentSleepTrackerBinding
  * (Because we have not learned about RecyclerView yet.)
  */
 class SleepTrackerFragment : Fragment() {
-
     /**
      * Called when the Fragment is ready to display content to the screen.
      *
      * This function uses DataBindingUtil to inflate R.layout.fragment_sleep_quality.
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
 
         // Get a reference to the binding object and inflate the fragment views.
         val binding: FragmentSleepTrackerBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_sleep_tracker, container, false)
+        // Create an instance of the ViewModel Factory.
+        val application = requireNotNull(this.activity).application
+        // Get a reference to the SleepDatabaseDao from the SleepDatabase
+        val dataSource = SleepDatabase.getInstance(application).sleepDatabaseDao
 
+        val viewModelFactory = SleepTrackerViewModelFactory(dataSource, application)
+
+        val sleepTrackerViewModel = ViewModelProvider(
+            this,
+            viewModelFactory)[SleepTrackerViewModel::class.java]
+
+        binding.sleepTrackerViewModel = sleepTrackerViewModel
+
+        binding.setLifecycleOwner(this)
         return binding.root
     }
 }
