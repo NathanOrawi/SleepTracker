@@ -18,10 +18,8 @@ package com.example.android.trackmysleepquality
 
 import android.annotation.SuppressLint
 import android.content.res.Resources
-import android.os.Build
 import android.text.Html
 import android.text.Spanned
-import androidx.core.text.HtmlCompat
 import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.inventory.R
 import java.text.SimpleDateFormat
