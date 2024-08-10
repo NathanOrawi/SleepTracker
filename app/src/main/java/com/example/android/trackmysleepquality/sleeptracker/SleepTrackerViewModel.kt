@@ -26,5 +26,21 @@ import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 class SleepTrackerViewModel(
         val database: SleepDatabaseDao,
         application: Application) : AndroidViewModel(application) {
+                private var tonight = MutableLiveData<SleepNight?>()
+                init {
+                    initializeTonight()
+                }
+                private fun initializeTonight() {
+                    viewModelScope.launch {
+                        tonight.value = getTonightFromDatabase()
+                    }
+                }
+                private suspend fun getTonightFromDatabase(): SleepNight? {
+                    var night = database.getTonight()
+                    if (night?.endTimeMilli != night?.startTimeMilli) {
+                        night = null
+                    }
+                    return night
+                }
 }
 
