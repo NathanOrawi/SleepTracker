@@ -62,5 +62,26 @@ class SleepTrackerViewModel(
                 private suspend fun insert(night: SleepNight) {
                     database.insert(night)
                 }
+            fun onStopTracking() {
+                    viewModelScope.launch {
+                        val oldNight = tonight.value ?: return@launch
+                        oldNight.endTimeMilli = System.currentTimeMillis()
+                        update(oldNight)
+                    }
+                }
+                private suspend fun update(night: SleepNight) {
+                    database.update(night)
+                }
+
+                fun onClear() {
+                    viewModelScope.launch {
+                        clear()
+                        tonight.value = null
+                    }
+                }
+
+                private suspend fun clear() {
+                    database.clear()
+                }
 }
 
