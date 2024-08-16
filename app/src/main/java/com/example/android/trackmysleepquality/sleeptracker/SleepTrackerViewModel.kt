@@ -18,12 +18,14 @@ package com.example.android.trackmysleepquality.sleeptracker
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.formatNights
+import com.example.android.trackmysleepquality.sleepquality.SleepQualityViewModel
 import kotlinx.coroutines.launch
 
 /**
@@ -38,6 +40,8 @@ class SleepTrackerViewModel(
     val nightsString = nights.map { nights ->
         formatNights(nights, application.resources)
     }
+
+    val sleepQualityViewModel = SleepQualityViewModel(database, application)
 
     init {
         initializeTonight()

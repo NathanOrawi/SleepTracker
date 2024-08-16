@@ -22,6 +22,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.inventory.R
 import com.example.inventory.databinding.FragmentSleepQualityBinding
 
@@ -48,8 +50,24 @@ class SleepQualityFragment : Fragment() {
             inflater, R.layout.fragment_sleep_quality, container, false
         )
 
-        // val application = requireNotNull(this.activity).application
+        // Create an instance of the ViewModel Factory.
+        val application = requireNotNull(this.activity).application
+        // Get a reference to the SleepDatabaseDao from the SleepDatabase
+        val dataSource = SleepDatabase.getInstance(application).sleepDatabaseDao
 
+        val viewModelFactory = SleepQualityViewModelFactory(dataSource, application)
+
+        // Get a reference to the ViewModel associated with this fragment.
+        val sleepQualityViewModel = ViewModelProvider(
+            this,
+            viewModelFactory
+        )[SleepQualityViewModel::class.java]
+
+        // Add OnClick event listener to the SleepQualityFragment's buttons.
+        binding.sleepQualityViewModel = sleepQualityViewModel
+
+        // Set the current activity as the lifecycle owner of the binding.
+        binding.setLifecycleOwner(this)
         return binding.root
     }
 }
